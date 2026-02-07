@@ -86,7 +86,7 @@ def main():
     ap.add_argument("--temperature", type=float, default=0.6)
     ap.add_argument("--top_p", type=float, default=0.95)
     ap.add_argument("--top_k", type=int, default=20)
-    ap.add_argument("--repetition_penalty", type=float, default=None)
+    ap.add_argument("--repetition_penalty", type=float, default=1.0)
 
     ap.add_argument("--window_size", type=int, default=2048)  # deepconf の window_size :contentReference[oaicite:3]{index=3}
     ap.add_argument("--patch_extract_hashes", type=int, default=0)  # 1で #### 対応を追加
