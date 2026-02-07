@@ -118,13 +118,13 @@ def main():
 
     # 投票method名（公式出力） :contentReference[oaicite:7]{index=7}
     methods = [
-        "simple_majority",
+        "majority",
         "mean_confidence_weighted",
         "tail_confidence_weighted",
-        "bottom_window_confidence_weighted",
-        "min_window_confidence_weighted",
-        "top_10_tail_filtered",
-        "top_10_bottom_window_filtered",
+        "bottom_window_weighted",
+        "min_window_weighted",
+        "top10_tail_filtered",
+        "top10_bottom_window_filtered",
     ]
 
     correct = {m: 0 for m in methods}
