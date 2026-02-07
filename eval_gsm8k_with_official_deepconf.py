@@ -93,7 +93,7 @@ def main():
     ap.add_argument("--out_jsonl", type=str, default="gsm8k_deepconf_official.jsonl")
     args = ap.parse_args()
 
-    random.seed(args.seed)
+    #random.seed(args.seed)
 
     # optional: #### を deepconf 側が拾えるようにする
     maybe_patch_deepconf_extract_answer(bool(args.patch_extract_hashes))
