@@ -173,7 +173,7 @@ def main():
             if (i + 1) % 10 == 0:
                 msg = [f"[{i+1}/{n}]"]
                 msg += [f"{m}={correct[m]/max(1,total):.4f}" for m in methods[:3]]
-                msg += [f"... bottom={correct['bottom_window_confidence_weighted']/max(1,total):.4f}"]
+                msg += [f"... bottom={correct['bottom_window_weighted']/max(1,total):.4f}"]
                 print(" ".join(msg))
 
     print("Done.")
