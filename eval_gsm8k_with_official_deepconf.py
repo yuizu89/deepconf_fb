@@ -106,13 +106,13 @@ def main():
 
     # vLLM sampling params（deepthink に渡す） :contentReference[oaicite:5]{index=5}
     sp = SamplingParams(
-        n=1,
+        n=args.K,
         temperature=float(args.temperature),
         top_p=float(args.top_p),
         top_k=int(args.top_k),
         max_tokens=int(args.max_tokens),
         repetition_penalty=args.repetition_penalty,
-        #seed=int(args.seed),
+        seed=int(args.seed + i),
         logprobs=20,  # DeepConfはtop-k logprobsを使う前提 :contentReference[oaicite:6]{index=6}
     )
 
@@ -149,7 +149,7 @@ def main():
             out = deep_llm.deepthink(
                 prompt=prompt,
                 mode="offline",
-                budget=int(args.K),
+                budget=1,
                 window_size=int(args.window_size),
                 sampling_params=sp,
                 compute_multiple_voting=True,
