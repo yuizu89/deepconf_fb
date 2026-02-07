@@ -106,7 +106,7 @@ def main():
 
     # vLLM sampling params（deepthink に渡す） :contentReference[oaicite:5]{index=5}
     sp = SamplingParams(
-        n=int(args.K),
+        n=1,
         temperature=float(args.temperature),
         top_p=float(args.top_p),
         top_k=int(args.top_k),
