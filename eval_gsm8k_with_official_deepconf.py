@@ -155,6 +155,8 @@ def main():
                 compute_multiple_voting=True,
             )
 
+            print("voting keys:", sorted(out.voting_results.keys()))
+
             rec = {"idx": i, "gold": gold, "question": q, "K": int(args.K), "results": {}}
 
             for m in methods:
