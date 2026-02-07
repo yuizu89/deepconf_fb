@@ -140,7 +140,10 @@ def main():
 
             # deepconf は「chat template適用済みの prompt string」を要求 :contentReference[oaicite:8]{index=8}
             prompt = deep_llm.tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+                enable_thinking=True,  # ← 明示的にON（Qwen3のハードスイッチ）
             )
 
             out = deep_llm.deepthink(
