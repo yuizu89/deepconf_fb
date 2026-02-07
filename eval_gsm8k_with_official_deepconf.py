@@ -112,7 +112,7 @@ def main():
         top_k=int(args.top_k),
         max_tokens=int(args.max_tokens),
         repetition_penalty=args.repetition_penalty,
-        seed=int(args.seed + i),
+        seed=int(args.seed),
         logprobs=20,  # DeepConfはtop-k logprobsを使う前提 :contentReference[oaicite:6]{index=6}
     )
 
