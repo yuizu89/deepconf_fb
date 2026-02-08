@@ -9,12 +9,35 @@ from typing import Dict, List, Optional
 from datasets import load_dataset
 
 from deepconf import DeepThinkLLM  # facebookresearch/deepconf
+import deepconf.utils as dcu
 from vllm import SamplingParams
 
 
 _HASH_RE = re.compile(r"####\s*([^\n\r]*)")
 _NUM_RE = re.compile(r"-?\d+(?:\.\d+)?")
 _BOX_RE = re.compile(r"\\boxed\s*[\{\s]")  # existence check only
+
+
+def patch_deepconf_vote_windows(args):
+    import deepconf.utils as dcu
+
+    _orig_tail = dcu.calculate_tail_confidence
+    _orig_bottom = dcu.calculate_bottom_window_confidence
+
+    def patched_tail(confs, tail_tokens=2048):
+        if tail_tokens == 2048:
+            tail_tokens = int(args.vote_tail_tokens)
+        return _orig_tail(confs, tail_tokens=int(tail_tokens))
+
+    def patched_bottom(confs, window_size=2048, bottom_percent=0.1):
+        if window_size == 2048:
+            window_size = int(args.vote_window_tokens)
+        if bottom_percent == 0.1:
+            bottom_percent = float(args.vote_bottom_percent)
+        return _orig_bottom(confs, window_size=int(window_size), bottom_percent=float(bottom_percent))
+
+    dcu.calculate_tail_confidence = patched_tail
+    dcu.calculate_bottom_window_confidence = patched_bottom
 
 
 def extract_last_number(text: str) -> Optional[str]:
@@ -88,6 +111,10 @@ def main():
     ap.add_argument("--top_k", type=int, default=20)
     ap.add_argument("--repetition_penalty", type=float, default=1.0)
 
+    ap.add_argument("--vote_tail_tokens", type=int, default=2048)
+    ap.add_argument("--vote_window_tokens", type=int, default=2048)
+    ap.add_argument("--vote_bottom_percent", type=float, default=0.10)
+
     ap.add_argument("--window_size", type=int, default=2048)  # deepconf の window_size :contentReference[oaicite:3]{index=3}
     ap.add_argument("--patch_extract_hashes", type=int, default=0)  # 1で #### 対応を追加
     ap.add_argument("--out_jsonl", type=str, default="gsm8k_deepconf_official.jsonl")
@@ -138,6 +165,8 @@ def main():
 
             messages = build_messages_boxed(q)
 
+            # confidence計算の窓幅を変更するためのパッチコード適用
+            patch_deepconf_vote_windows(args)
             # deepconf は「chat template適用済みの prompt string」を要求 :contentReference[oaicite:8]{index=8}
             prompt = deep_llm.tokenizer.apply_chat_template(
                 messages,
